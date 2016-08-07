@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/BoerseRechnerAnalyseMehrereRechner.iml" filepath="$PROJECT_DIR$/BoerseRechnerAnalyseMehrereRechner.iml" />
+      <module fileurl="file://$PROJECT_DIR$/BoereMicroAnalyseRechnerZusammenfasser.iml" filepath="$PROJECT_DIR$/BoereMicroAnalyseRechnerZusammenfasser.iml" />
     </modules>
   </component>
 </project>

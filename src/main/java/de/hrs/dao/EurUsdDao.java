@@ -50,7 +50,7 @@ public class EurUsdDao {
 
         List<Eurusd> eurusdList = new ArrayList<Eurusd>();
 
-        List<Map<String,Object>> rows = template.queryForList(sql);
+        //List<Map<String,Object>> rows = template.queryForList(sql);
         for (Map row : template.queryForList(sql)) {
             eurusdList.add(new Eurusd((Timestamp) row.get("zeit"), (Double) row.get("wert")));
         }

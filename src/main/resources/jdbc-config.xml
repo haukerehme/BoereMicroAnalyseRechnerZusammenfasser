@@ -12,8 +12,8 @@
         </property>
 
         <property name="url">
-            <value>jdbc:mysql://62.75.142.111:3306/SpringTest</value>
-            <!--<value>jdbc:mysql://127.0.0.1:3306/SpringTest</value>-->
+            <!--<value>jdbc:mysql://62.75.142.111:3306/SpringTest</value>-->
+            <value>jdbc:mysql://127.0.0.1:3306/SpringTest</value>
 
         </property>
 
@@ -22,8 +22,8 @@
         </property>
 
         <property name="password">
-            <value>43mitmilch</value>
-           <!-- <value>logentis99</value> -->
+            <!--<value>43mitmilch</value>-->
+            <value>logentis99</value>
         </property>
 
 
