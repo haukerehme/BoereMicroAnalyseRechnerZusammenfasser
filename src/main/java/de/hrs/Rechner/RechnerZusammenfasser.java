@@ -34,6 +34,7 @@ public class RechnerZusammenfasser implements Runnable{
         this.instrument = instrument;
         this.mehrereVergleichsstrecken = mehrereVergleichsstrecken;
         this.SimulatorModus = Simulatormodus;
+        this.tradevorhersage = new Tradevorhersage();
     }
 
     @Override
