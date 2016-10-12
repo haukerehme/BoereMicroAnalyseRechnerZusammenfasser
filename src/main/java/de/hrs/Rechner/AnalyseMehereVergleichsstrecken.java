@@ -4,13 +4,15 @@ import de.hrs.model.TradeMessage;
 import de.hrs.model.Tradevorhersage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by hrs on 21.06.16.
  */
-public class AnalyseMehereVergleichsstrecken {
+public class AnalyseMehereVergleichsstrecken implements Runnable {
 
     public static Logger log = LoggerFactory.getLogger(AnalyseMehereVergleichsstrecken.class);
     RechnerZusammenfasser rechner;
@@ -84,26 +86,59 @@ public class AnalyseMehereVergleichsstrecken {
     }
 
     public void run(){
-        Tradevorhersage tradeTmp;
-        rechner = new RechnerZusammenfasser(this.closewerte, this.closewerte.size()-1, 240, auswertungslaenge, 30,spread,"EUR/USD",true,false);
-        tradeTmp = rechner.analyse(/*this.closewerte, this.closewerte.size()-1, 240, auswertungslaenge*/);
-        addiere(tradeTmp);
 
-        rechner = new RechnerZusammenfasser(this.closewerte, this.closewerte.size()-1, 210, auswertungslaenge, 30,spread,"EUR/USD",true,false);
-        tradeTmp = rechner.analyse(/*this.closewerte, this.closewerte.size()-1, 240, auswertungslaenge*/);
+        //Hier ArrayList<RechnerZusammenFasser> deklarieren
+        //Jeder Thread bekommt eine Sublist von closewerte und
+        //Die ArrayList<RechnerZusammenFasser> wird in einer for-each Schleife durchlaufen.
+        //Wenn bei allen Threads thread.join erfolgreich, dann Auswertung
+
+        ArrayList<RechnerZusammenfasser> listRechner = new ArrayList<>();
+        ArrayList<Thread> listThread = new ArrayList<>();
+        int[] vergleichslaengen = {240,210,180,150,120};
+        int[] zusammenfasserInterval = {30,30,20,10,10};
+        int threadPaare = 10;
+        int blockgroesse = this.closewerte.size() / threadPaare;
+        for (int i = 0; i < threadPaare ; i++){
+            for(int j = 0; j < vergleichslaengen.length;j++){
+                List<Integer> tmpSublist = this.closewerte.subList(i*(blockgroesse),i*(blockgroesse)+(blockgroesse)-1);
+                tmpSublist.addAll(this.closewerte.subList(this.closewerte.size()-(vergleichslaengen.length+1),this.closewerte.size()-1));
+
+                listRechner.add(
+                        new RechnerZusammenfasser(tmpSublist, this.closewerte.size()-1, vergleichslaengen[j], auswertungslaenge, zusammenfasserInterval[j],spread,"EUR/USD",true,false)
+                );
+                listThread.add(new Thread(listRechner.get((i*vergleichslaengen.length)+j)));
+                listThread.get((i*vergleichslaengen.length)+j).start();
+            }
+        }
+
+        for (int i = 0; i < 50; i++){
+            try {
+                listThread.get(i).join();
+                addiere(listRechner.get(i).getTradeTmp());
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+
+        //rechner = new RechnerZusammenfasser(this.closewerte, this.closewerte.size()-1, 240, auswertungslaenge, 30,spread,"EUR/USD",true,false);
+        //tradeTmp = rechner.analyse(/*this.closewerte, this.closewerte.size()-1, 240, auswertungslaenge*/);
+        //addiere(tradeTmp);
+
+        /*rechner = new RechnerZusammenfasser(this.closewerte, this.closewerte.size()-1, 210, auswertungslaenge, 30,spread,"EUR/USD",true,false);
+        tradeTmp = rechner.analyse();
         addiere(tradeTmp);
 
         rechner = new RechnerZusammenfasser(this.closewerte, this.closewerte.size()-1, 180, auswertungslaenge, 20,spread,"EUR/USD",true,false);
-        tradeTmp = rechner.analyse(/*this.closewerte, this.closewerte.size()-1, 240, auswertungslaenge*/);
+        tradeTmp = rechner.analyse();
         addiere(tradeTmp);
 
         rechner = new RechnerZusammenfasser(this.closewerte, this.closewerte.size()-1, 150, auswertungslaenge, 10,spread,"EUR/USD",true,false);
-        tradeTmp = rechner.analyse(/*this.closewerte, this.closewerte.size()-1, 240, auswertungslaenge*/);
+        tradeTmp = rechner.analyse();
         addiere(tradeTmp);
 
         rechner = new RechnerZusammenfasser(this.closewerte, this.closewerte.size()-1, 120, auswertungslaenge, 10,spread,"EUR/USD",true,false);
-        tradeTmp = rechner.analyse(/*this.closewerte, this.closewerte.size()-1, 240, auswertungslaenge*/);
-        addiere(tradeTmp);
+        tradeTmp = rechner.analyse();
+        addiere(tradeTmp);*/
         System.out.println(" Formation "+anzFormFound+" mal gefunden");
 
         TradeMessage tradeMessage = new TradeMessage(now, "EUR/USD", auswertungslaenge, anzFormFound, GewinnzaehlerLong, mittlererLongGewinn, hoherLongGewinn, sehrHoherLongGewinn, VerlustzaehlerLong, hoherLongVerlust, geringerShortGewinn, mittlererShortGewinn, hoherShortGewinn, sehrHoherShortGewinn, VerlustzaehlerShort, hoherShortVerlust);

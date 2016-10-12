@@ -7,7 +7,14 @@ import java.util.List;
 /**
  * Created by hrs on 21.06.16.
  */
-public class RechnerZusammenfasser {
+public class RechnerZusammenfasser implements Runnable{
+
+    private volatile Tradevorhersage tradevorhersage;
+
+    public Tradevorhersage getTradeTmp() {
+        return tradevorhersage;
+    }
+
     List<Integer> closewerte;
     List<List<Integer>> aktuellerAbschnittUnterteilt;
     int ausgangspkt,vergleichsLaenge,auswertungslaenge;
@@ -30,7 +37,8 @@ public class RechnerZusammenfasser {
         this.SimulatorModus = Simulatormodus;
     }
 
-    Tradevorhersage analyse(/*int ausgangspkt,int vergleichsLaenge,int auswertungslaenge*/){
+    @Override
+    public void run(/*int ausgangspkt,int vergleichsLaenge,int auswertungslaenge*/){
 
         int GewinnzaehlerLong = 0;
         int VerlustzaehlerLong = 0;
@@ -224,33 +232,31 @@ public class RechnerZusammenfasser {
         double wahrscheinlichkeitShortHoherGewinn = 100* (double) hoherShortGewinn / ((double) GewinnzaehlerShort);
 
         if(mehrereVergleichsstrecken){
-            Tradevorhersage trade = new Tradevorhersage();
-
-            trade.setGenerellMinus(GenerellMinus);
-            trade.setGenerellPlus(GenerellPlus);
-            trade.setGewinnzaehlerLong(GewinnzaehlerLong);
-            trade.setGewinnzaehlerShort(GewinnzaehlerShort);
-            trade.setVerlustzaehlerLong(VerlustzaehlerLong);
-            trade.setVerlustzaehlerShort(VerlustzaehlerShort);
-            trade.setAnzFormFound(anzFormFound);
-            trade.setGeringerLongGewinn(geringerLongGewinn);
-            trade.setGeringerShortGewinn(geringerShortGewinn);
-            trade.setHoherLongGewinn(hoherLongGewinn);
-            trade.setHoherLongVerlust(hoherLongVerlust);
-            trade.setHoherShortGewinn(hoherShortGewinn);
-            trade.setHoherShortVerlust(hoherShortVerlust);
-            trade.setHohesMinus(hohesMinus);
-            trade.setHohesPlus(hohesPlus);
-            trade.setMittlererLongGewinn(mittlererLongGewinn);
-            trade.setMittlererShortGewinn(mittlererShortGewinn);
-            trade.setSehrHoherLongGewinn(sehrHoherLongGewinn);
-            trade.setSehrHoherShortGewinn(sehrHoherShortGewinn);
-            return trade;
+            tradevorhersage.setGenerellMinus(GenerellMinus);
+            tradevorhersage.setGenerellPlus(GenerellPlus);
+            tradevorhersage.setGewinnzaehlerLong(GewinnzaehlerLong);
+            tradevorhersage.setGewinnzaehlerShort(GewinnzaehlerShort);
+            tradevorhersage.setVerlustzaehlerLong(VerlustzaehlerLong);
+            tradevorhersage.setVerlustzaehlerShort(VerlustzaehlerShort);
+            tradevorhersage.setAnzFormFound(anzFormFound);
+            tradevorhersage.setGeringerLongGewinn(geringerLongGewinn);
+            tradevorhersage.setGeringerShortGewinn(geringerShortGewinn);
+            tradevorhersage.setHoherLongGewinn(hoherLongGewinn);
+            tradevorhersage.setHoherLongVerlust(hoherLongVerlust);
+            tradevorhersage.setHoherShortGewinn(hoherShortGewinn);
+            tradevorhersage.setHoherShortVerlust(hoherShortVerlust);
+            tradevorhersage.setHohesMinus(hohesMinus);
+            tradevorhersage.setHohesPlus(hohesPlus);
+            tradevorhersage.setMittlererLongGewinn(mittlererLongGewinn);
+            tradevorhersage.setMittlererShortGewinn(mittlererShortGewinn);
+            tradevorhersage.setSehrHoherLongGewinn(sehrHoherLongGewinn);
+            tradevorhersage.setSehrHoherShortGewinn(sehrHoherShortGewinn);
+            //return trade;
         }
-        if( SimulatorModus ){
+        /*if( SimulatorModus ){
             return new Tradevorhersage(anzFormFound, wahrscheinlichkeitLong, wahrscheinlichkeitShort,wahrscheinlichkeitLongHoherGewinn,wahrscheinlichkeitShortHoherGewinn);
         }
-        return null;
+        return null;*/
     }
 
     List<Integer> getAnalyseArray(int vergleichsLaenge){
