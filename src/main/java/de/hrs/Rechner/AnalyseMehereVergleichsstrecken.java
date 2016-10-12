@@ -94,6 +94,12 @@ public class AnalyseMehereVergleichsstrecken implements Runnable {
 
         ArrayList<RechnerZusammenfasser> listRechner = new ArrayList<>();
         ArrayList<Thread> listThread = new ArrayList<>();
+        ArrayList<Integer> listVergleichslaengen = new ArrayList<Integer>();
+        listVergleichslaengen.add(240);
+        listVergleichslaengen.add(210);
+        listVergleichslaengen.add(180);
+        listVergleichslaengen.add(150);
+        listVergleichslaengen.add(120);
         int[] vergleichslaengen = {240,210,180,150,120};
         int[] zusammenfasserInterval = {30,30,20,10,10};
         int threadPaare = 10;
@@ -104,7 +110,8 @@ public class AnalyseMehereVergleichsstrecken implements Runnable {
                 tmpSublist.addAll(this.closewerte.subList(this.closewerte.size()-(vergleichslaengen.length+1),this.closewerte.size()-1));
 
                 listRechner.add(
-                        new RechnerZusammenfasser(tmpSublist, vergleichslaengen[j], auswertungslaenge, zusammenfasserInterval[j],spread,"EUR/USD",true,false)
+
+                        new RechnerZusammenfasser(tmpSublist, listVergleichslaengen.get(j), auswertungslaenge, zusammenfasserInterval[j],spread,"EUR/USD",true,false)
                 );
                 listThread.add(new Thread(listRechner.get((i*vergleichslaengen.length)+j)));
                 listThread.get((i*vergleichslaengen.length)+j).start();
