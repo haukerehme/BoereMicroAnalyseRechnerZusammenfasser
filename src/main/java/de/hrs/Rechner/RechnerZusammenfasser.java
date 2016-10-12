@@ -260,7 +260,7 @@ public class RechnerZusammenfasser implements Runnable{
     }
 
     List<Integer> getAnalyseArray(int vergleichsLaenge){
-        List<Integer> tmp = closewerte.subList(closewerte.size()-(vergleichsLaenge), closewerte.size());
+        List<Integer> tmp = closewerte.subList(closewerte.size()-(vergleichsLaenge), closewerte.size()-1);
 
         return tmp;
     }
