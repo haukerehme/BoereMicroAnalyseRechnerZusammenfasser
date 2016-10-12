@@ -58,10 +58,8 @@ public class RechnerSchnittstelle extends Thread{
                 diffClosewerte.add(diff);
                 eurusdLetzterWert = eurusdWert;
                 new AnalyseMehereVergleichsstrecken(
-                        new Timestamp(new Date().getTime()),
-                        diffClosewerte, diffClosewerte.size()-1, null, 20 , 1, "EUR/USD").run();
+                        new Timestamp(new Date().getTime()), diffClosewerte, diffClosewerte.size()-1, null, 20 , 1, "EUR/USD").run();
             }
-
         } catch (UnknownHostException e) {
             e.printStackTrace();
         } catch (IOException e) {

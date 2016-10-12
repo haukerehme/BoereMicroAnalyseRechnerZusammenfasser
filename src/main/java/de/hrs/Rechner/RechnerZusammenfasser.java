@@ -233,7 +233,6 @@ public class RechnerZusammenfasser implements Runnable{
     List<Integer> getAnalyseArray(int vergleichsLaenge){
         System.out.println("Vergleichslaenge: " + vergleichsLaenge);
         System.out.println("closewerte: " + closewerte);
-        System.out.println("closewerte: " + closewerte.toString());
         System.out.println("closewerteSize: " + closewerte.size());
         return closewerte.subList(closewerte.size() - (vergleichsLaenge), closewerte.size()-1);
     }
