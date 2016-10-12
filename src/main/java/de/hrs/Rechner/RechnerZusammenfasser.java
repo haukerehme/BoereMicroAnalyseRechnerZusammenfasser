@@ -17,7 +17,7 @@ public class RechnerZusammenfasser implements Runnable{
 
     List<Integer> closewerte;
     List<List<Integer>> aktuellerAbschnittUnterteilt;
-    int ausgangspkt,vergleichsLaenge,auswertungslaenge;
+    int vergleichsLaenge,auswertungslaenge;
     boolean longPosition, mehrereVergleichsstrecken, SimulatorModus;
     int zusammenfasserInterval;
     int spread;
@@ -25,9 +25,8 @@ public class RechnerZusammenfasser implements Runnable{
 
     RechnerZusammenfasser(){}
 
-    public RechnerZusammenfasser(List<Integer> intArray,int ausgangspkt,int vergleichsLaenge,int auswertungslaenge, int zusammenfasserInterval, int spread, String instrument, boolean mehrereVergleichsstrecken, boolean Simulatormodus){
+    public RechnerZusammenfasser(List<Integer> intArray,int vergleichsLaenge,int auswertungslaenge, int zusammenfasserInterval, int spread, String instrument, boolean mehrereVergleichsstrecken, boolean Simulatormodus){
         closewerte = intArray;
-        this.ausgangspkt =ausgangspkt;
         this.vergleichsLaenge = vergleichsLaenge;
         this.auswertungslaenge = auswertungslaenge;
         this.zusammenfasserInterval = zusammenfasserInterval;
@@ -261,7 +260,6 @@ public class RechnerZusammenfasser implements Runnable{
 
     List<Integer> getAnalyseArray(int vergleichsLaenge){
         List<Integer> tmp = closewerte.subList(closewerte.size()-(vergleichsLaenge), closewerte.size()-1);
-
         return tmp;
     }
 
