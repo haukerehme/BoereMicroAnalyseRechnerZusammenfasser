@@ -73,7 +73,7 @@ public class RechnerZusammenfasser implements Runnable {
         for (int i = 0; i < closewerte.size() - (gesuchtesMuster.size() + this.auswertungslaenge + 1); i++) {
             formFound = true;
 
-            int diffSummeMusterOther = addierer(gesuchtesMuster, 0, zusammenfasserInterval - 1) - addierer(closewerte, i, i + (zusammenfasserInterval - 1));
+            int diffSummeMusterOther = addierer(gesuchtesMuster, 0, zusammenfasserInterval - 1) - addierer2(closewerte, i, i + (zusammenfasserInterval - 1));
 
             if (diffSummeMusterOther < 4 && diffSummeMusterOther > -4) {
 
@@ -85,13 +85,13 @@ public class RechnerZusammenfasser implements Runnable {
                         break;
                     }
                 }*/
-                if (formFound) {
+                /*if (formFound) {
                     diffSummeMusterOther = addierer(gesuchtesMuster, 0, gesuchtesMuster.size() - 1) - addierer(closewerte, i, i + (gesuchtesMuster.size() - 1));
                     if ((diffSummeMusterOther >= (this.vergleichsLaenge / 10)) || (diffSummeMusterOther <= -(this.vergleichsLaenge / 10))) {
                         //System.out.println("Vom Endgegner abgelehnt!!!");
                         formFound = false;
                     }
-                }
+                }*/
                 if (formFound) {
                     anzFormFound++;
                     int entwicklung = 0;
@@ -230,10 +230,22 @@ public class RechnerZusammenfasser implements Runnable {
     int addierer(List<Integer> liste, int startIndex, int endIndex) {
         int result = 0;
         for (int i = startIndex; i <= endIndex; i++) {
-            if (liste.size() - 1 < i) {
+            if (liste.size() < i) {
                 result += liste.get(i);
             }else{
                 Logger.getGlobal().warning("Addierer will be out of range addieren. Liste.size() : "+liste.size()+ "Index: "+i);
+            }
+        }
+        return result;
+    }
+
+    int addierer2(List<Integer> liste, int startIndex, int endIndex) {
+        int result = 0;
+        for (int i = startIndex; i <= endIndex; i++) {
+            if (liste.size() > i) {
+                result += liste.get(i);
+            }else{
+                Logger.getGlobal().warning("Addierer2 will be out of range addieren. Liste.size() : "+liste.size()+ "Index: "+i);
             }
         }
         return result;
