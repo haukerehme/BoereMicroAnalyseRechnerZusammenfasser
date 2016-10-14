@@ -124,6 +124,8 @@ public class AnalyseMehereVergleichsstrecken implements Runnable {
         for (int i = 0; i < 50; i++){
             try {
                 listThread.get(i).join();
+                System.out.println("Thread "+ i +": Formation "+listRechner.get(i).getTradeTmp().getAnzFormFound()+" mal gefunden");
+
                 addiere(listRechner.get(i).getTradeTmp());
             } catch (InterruptedException e) {
                 e.printStackTrace();
@@ -149,7 +151,6 @@ public class AnalyseMehereVergleichsstrecken implements Runnable {
         rechner = new RechnerZusammenfasser(this.closewerte, this.closewerte.size()-1, 120, auswertungslaenge, 10,spread,"EUR/USD",true,false);
         tradeTmp = rechner.analyse();
         addiere(tradeTmp);*/
-        System.out.println(" Formation "+anzFormFound+" mal gefunden");
 
         TradeMessage tradeMessage = new TradeMessage(now, "EUR/USD", auswertungslaenge, anzFormFound, GewinnzaehlerLong, mittlererLongGewinn, hoherLongGewinn, sehrHoherLongGewinn, VerlustzaehlerLong, hoherLongVerlust, geringerShortGewinn, mittlererShortGewinn, hoherShortGewinn, sehrHoherShortGewinn, VerlustzaehlerShort, hoherShortVerlust);
         /*try {
