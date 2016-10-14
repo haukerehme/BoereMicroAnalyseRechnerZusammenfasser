@@ -77,14 +77,14 @@ public class RechnerZusammenfasser implements Runnable {
 
             if (diffSummeMusterOther < 4 && diffSummeMusterOther > -4) {
 
-                /*for (int z = zusammenfasserInterval; z < gesuchtesMuster.size(); z = z + zusammenfasserInterval) {
+                for (int z = zusammenfasserInterval; z < gesuchtesMuster.size(); z = z + zusammenfasserInterval) {
                     diffSummeMusterOther = addierer(gesuchtesMuster, z, z + zusammenfasserInterval - 1) - addierer(closewerte, i + z, i + z + zusammenfasserInterval - 1);
 
                     if (diffSummeMusterOther >= 4 || diffSummeMusterOther <= -4) {
                         formFound = false;
                         break;
                     }
-                }*/
+                }
                 if (formFound) {
                     diffSummeMusterOther = addierer(gesuchtesMuster, 0, gesuchtesMuster.size() - 1) - addierer(closewerte, i, i + (gesuchtesMuster.size() - 1));
                     if ((diffSummeMusterOther >= (this.vergleichsLaenge / 10)) || (diffSummeMusterOther <= -(this.vergleichsLaenge / 10))) {
