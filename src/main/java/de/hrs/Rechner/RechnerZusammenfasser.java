@@ -216,7 +216,7 @@ public class RechnerZusammenfasser implements Runnable {
         System.out.println("Vergleichslaenge: " + vergleichsLaenge);
         System.out.println("closewerte == null: " + closewerte == null);
         System.out.println("closewerteSize: " + closewerte.size());
-        return closewerte.subList(closewerte.size() - (vergleichsLaenge), closewerte.size() - 1);
+        return closewerte.subList(closewerte.size() - (vergleichsLaenge+1), closewerte.size() - 1);
     }
 
     int sublistAddierer(List<Integer> liste) {
