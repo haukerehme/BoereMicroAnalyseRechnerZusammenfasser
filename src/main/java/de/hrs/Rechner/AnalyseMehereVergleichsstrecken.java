@@ -103,7 +103,7 @@ public class AnalyseMehereVergleichsstrecken implements Runnable {
         // - 240 da das längste Muster abgezogen werden muss
         int blockgroesse = (this.closewerte.size() - (auswertungslaenge + 240)) / threadPaare;
         for (int i = 0; i < threadPaare ; i++){
-            List<Integer> historie = new ArrayList<>(this.closewerte.subList(i*(blockgroesse),((i+1)*blockgroesse)-1+auswertungslaenge));
+            List<Integer> historie = new ArrayList<>(this.closewerte.subList(i * blockgroesse,((i + 1) * blockgroesse) - 1 + auswertungslaenge));
             List<Integer> muster = new ArrayList<>(this.closewerte.subList(this.closewerte.size()-(vergleichslaengen.length+1),this.closewerte.size()-1));
 
             for(int j = 0; j < vergleichslaengen.length;j++){
@@ -114,7 +114,7 @@ public class AnalyseMehereVergleichsstrecken implements Runnable {
             }
         }
 
-        for (int i = 0; i < 50; i++){
+        for (int i = 0; i < threadPaare * vergleichslaengen.length; i++){
             try {
                 listThread.get(i).join();
                 System.out.println("Thread "+ i +": Formation "+listRechner.get(i).getTradeTmp().getAnzFormFound()+" mal gefunden");
@@ -123,26 +123,6 @@ public class AnalyseMehereVergleichsstrecken implements Runnable {
                 e.printStackTrace();
             }
         }
-
-        //rechner = new RechnerZusammenfasser(this.closewerte, this.closewerte.size()-1, 240, auswertungslaenge, 30,spread,"EUR/USD",true,false);
-        //tradeTmp = rechner.analyse(/*this.closewerte, this.closewerte.size()-1, 240, auswertungslaenge*/);
-        //addiere(tradeTmp);
-
-        /*rechner = new RechnerZusammenfasser(this.closewerte, this.closewerte.size()-1, 210, auswertungslaenge, 30,spread,"EUR/USD",true,false);
-        tradeTmp = rechner.analyse();
-        addiere(tradeTmp);
-
-        rechner = new RechnerZusammenfasser(this.closewerte, this.closewerte.size()-1, 180, auswertungslaenge, 20,spread,"EUR/USD",true,false);
-        tradeTmp = rechner.analyse();
-        addiere(tradeTmp);
-
-        rechner = new RechnerZusammenfasser(this.closewerte, this.closewerte.size()-1, 150, auswertungslaenge, 10,spread,"EUR/USD",true,false);
-        tradeTmp = rechner.analyse();
-        addiere(tradeTmp);
-
-        rechner = new RechnerZusammenfasser(this.closewerte, this.closewerte.size()-1, 120, auswertungslaenge, 10,spread,"EUR/USD",true,false);
-        tradeTmp = rechner.analyse();
-        addiere(tradeTmp);*/
 
         TradeMessage tradeMessage = new TradeMessage(now, "EUR/USD", auswertungslaenge, anzFormFound, GewinnzaehlerLong, mittlererLongGewinn, hoherLongGewinn, sehrHoherLongGewinn, VerlustzaehlerLong, hoherLongVerlust, geringerShortGewinn, mittlererShortGewinn, hoherShortGewinn, sehrHoherShortGewinn, VerlustzaehlerShort, hoherShortVerlust);
         /*try {
