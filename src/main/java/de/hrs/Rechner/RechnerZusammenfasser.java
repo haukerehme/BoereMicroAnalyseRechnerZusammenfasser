@@ -166,28 +166,7 @@ public class RechnerZusammenfasser implements Runnable {
             }
         }
 
-        if (anzFormFound > 9 && (GewinnzaehlerLong > VerlustzaehlerLong * 2 || GewinnzaehlerShort > VerlustzaehlerShort * 2)) {
-            String plattform = "IG";
-
-            String ausgabe = "";
-            if (this.spread == 1) {
-                ausgabe += "\033[31mTRADEN: Plattform: " + plattform + " Instrument: " + this.instrument + " " + this.vergleichsLaenge + "min " + this.auswertungslaenge + "min\033[0m";
-            } else {
-                ausgabe += "\033[33mTRADEN: Plattform: " + plattform + " Instrument: " + this.instrument + " " + this.vergleichsLaenge + "min " + this.auswertungslaenge + "min\033[0m";
-
-            }
-            ausgabe += "\nLong:   GEWINN: " + GewinnzaehlerLong + "/" + anzFormFound + " , " + sehrHoherLongGewinn + "/" + GewinnzaehlerLong + " , " + hoherLongGewinn + "/" + GewinnzaehlerLong + " , " + mittlererLongGewinn + "/" + GewinnzaehlerLong + " , " + geringerLongGewinn + "/" + GewinnzaehlerLong;
-            ausgabe += "\nLong:   VERLUST: " + VerlustzaehlerLong + "/" + anzFormFound + " , " + hoherLongVerlust + "/" + VerlustzaehlerLong;
-
-            ausgabe += "\nShort:   GEWINN: " + GewinnzaehlerShort + "/" + anzFormFound + " , " + sehrHoherShortGewinn + "/" + GewinnzaehlerShort + " , " + hoherShortGewinn + "/" + GewinnzaehlerShort + " , " + mittlererShortGewinn + "/" + GewinnzaehlerShort + " , " + geringerShortGewinn + "/" + GewinnzaehlerShort;
-            ausgabe += "\nShort:   VERLUST: " + VerlustzaehlerShort + "/" + anzFormFound + " , " + hoherShortVerlust + "/" + VerlustzaehlerShort + "\n";
-            //System.out.print(ausgabe);
-        }
-
-        double wahrscheinlichkeitLong = 100 * (double) GewinnzaehlerLong / ((double) GewinnzaehlerLong + (double) VerlustzaehlerLong);
-        double wahrscheinlichkeitShort = 100 * (double) GewinnzaehlerShort / ((double) GewinnzaehlerShort + (double) VerlustzaehlerShort);
-        double wahrscheinlichkeitLongHoherGewinn = 100 * (double) hoherLongGewinn / ((double) GewinnzaehlerLong);
-        double wahrscheinlichkeitShortHoherGewinn = 100 * (double) hoherShortGewinn / ((double) GewinnzaehlerShort);
+        System.out.println("FormFound: " + anzFormFound);
 
         if (mehrereVergleichsstrecken) {
             tradevorhersage.setGenerellMinus(GenerellMinus);
