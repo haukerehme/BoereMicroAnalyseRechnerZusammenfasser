@@ -247,5 +247,4 @@ public class RechnerZusammenfasser implements Runnable {
         }
         return result;
     }
-ix and autofomynxc,myxnc,myx
 }
