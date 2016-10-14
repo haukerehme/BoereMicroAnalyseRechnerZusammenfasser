@@ -103,7 +103,10 @@ public class AnalyseMehereVergleichsstrecken implements Runnable {
         int[] vergleichslaengen = {240,210,180,150,120};
         int[] zusammenfasserInterval = {30,30,20,10,10};
         int threadPaare = 10;
-        int blockgroesse = this.closewerte.size() / threadPaare;
+
+        // - auswertungslaenge, weil es für letzten Block keine Auswertung gibt
+        // - 240 da das längste Muster abgezogen werden muss
+        int blockgroesse = (this.closewerte.size() - (auswertungslaenge + 240)) / threadPaare;
         for (int i = 0; i < threadPaare ; i++){
             for(int j = 0; j < vergleichslaengen.length;j++){
                 List<Integer> tmpSublist = new ArrayList<>(this.closewerte.subList(i*(blockgroesse),i*(blockgroesse)+(blockgroesse-1)+auswertungslaenge));
