@@ -166,8 +166,6 @@ public class RechnerZusammenfasser implements Runnable {
             }
         }
 
-        System.out.println("FormFound: " + anzFormFound);
-
         if (mehrereVergleichsstrecken) {
             tradevorhersage.setGenerellMinus(GenerellMinus);
             tradevorhersage.setGenerellPlus(GenerellPlus);
