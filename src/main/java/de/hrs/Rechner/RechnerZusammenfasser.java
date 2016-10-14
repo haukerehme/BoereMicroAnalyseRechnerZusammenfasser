@@ -69,17 +69,8 @@ public class RechnerZusammenfasser implements Runnable {
         boolean formFound;
 
         List<Integer> gesuchtesMuster = getAnalyseArray(vergleichsLaenge);
-        //System.out.println("Size gesuchtesMuster-Array: " + gesuchtesMuster.size());
-        //System.out.println("Zusammenfasser: "+ this.zusammenfasserInterval);
-        //aktuellerAbschnittUnterteilt = new ArrayList<List<Integer>>();
 
-        //aktueller Array wird zuvor in sublists unterteilt
-        //  -> Performance verbessern ;)
-        /*for(int u = 0; u < gesuchtesMuster.size(); u=u+zusammenfasserInterval){
-            aktuellerAbschnittUnterteilt.add(gesuchtesMuster.subList(u, u+zusammenfasserInterval-1));
-        }*/
-        //System.out.println("Arraygröße: "+aktuellerAbschnittUnterteilt.size());
-        for (int i = 0; i < closewerte.size() - (vergleichsLaenge + this.auswertungslaenge + 1); i++) {
+        for (int i = 0; i < closewerte.size() - (gesuchtesMuster.size() + this.auswertungslaenge + 1); i++) {
             formFound = true;
 
             int diffSummeMusterOther = addierer(gesuchtesMuster, 0, zusammenfasserInterval - 1) - addierer(closewerte, i, i + (zusammenfasserInterval - 1));
@@ -95,7 +86,7 @@ public class RechnerZusammenfasser implements Runnable {
                     }
                 }*/
                 if (formFound) {
-                    diffSummeMusterOther = addierer(gesuchtesMuster, 0, gesuchtesMuster.size() - 1) - addierer(closewerte, i, gesuchtesMuster.size() - 1);
+                    diffSummeMusterOther = addierer(gesuchtesMuster, 0, gesuchtesMuster.size() - 1) - addierer(closewerte, i, i + (gesuchtesMuster.size() - 1));
                     if ((diffSummeMusterOther >= (this.vergleichsLaenge / 10)) || (diffSummeMusterOther <= -(this.vergleichsLaenge / 10))) {
                         //System.out.println("Vom Endgegner abgelehnt!!!");
                         formFound = false;
