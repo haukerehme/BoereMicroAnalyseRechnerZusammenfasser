@@ -3,11 +3,12 @@ package de.hrs.Rechner;
 import de.hrs.model.Tradevorhersage;
 
 import java.util.List;
+import java.util.logging.Logger;
 
 /**
  * Created by hrs on 21.06.16.
  */
-public class RechnerZusammenfasser implements Runnable{
+public class RechnerZusammenfasser implements Runnable {
 
     private volatile Tradevorhersage tradevorhersage;
 
@@ -17,15 +18,16 @@ public class RechnerZusammenfasser implements Runnable{
 
     List<Integer> closewerte;
     List<List<Integer>> aktuellerAbschnittUnterteilt;
-    int vergleichsLaenge,auswertungslaenge;
+    int vergleichsLaenge, auswertungslaenge;
     boolean longPosition, mehrereVergleichsstrecken, SimulatorModus;
     int zusammenfasserInterval;
     int spread;
     String instrument;
 
-    RechnerZusammenfasser(){}
+    RechnerZusammenfasser() {
+    }
 
-    public RechnerZusammenfasser(List<Integer> intArray,int vergleichsLaenge,int auswertungslaenge, int zusammenfasserInterval, int spread, String instrument, boolean mehrereVergleichsstrecken, boolean Simulatormodus){
+    public RechnerZusammenfasser(List<Integer> intArray, int vergleichsLaenge, int auswertungslaenge, int zusammenfasserInterval, int spread, String instrument, boolean mehrereVergleichsstrecken, boolean Simulatormodus) {
         this.closewerte = intArray;
         this.vergleichsLaenge = vergleichsLaenge;
         this.auswertungslaenge = auswertungslaenge;
@@ -38,7 +40,7 @@ public class RechnerZusammenfasser implements Runnable{
     }
 
     @Override
-    public void run(/*int ausgangspkt,int vergleichsLaenge,int auswertungslaenge*/){
+    public void run(/*int ausgangspkt,int vergleichsLaenge,int auswertungslaenge*/) {
 
         int GewinnzaehlerLong = 0;
         int VerlustzaehlerLong = 0;
@@ -63,7 +65,7 @@ public class RechnerZusammenfasser implements Runnable{
         int sehrHoherShortGewinn = 0;
         int hoherShortVerlust = 0;
         int anzFormFound = 0;
-        int anzErsterRight =0;
+        int anzErsterRight = 0;
         boolean formFound;
 
         List<Integer> akt = getAnalyseArray(vergleichsLaenge);
@@ -77,106 +79,95 @@ public class RechnerZusammenfasser implements Runnable{
             aktuellerAbschnittUnterteilt.add(akt.subList(u, u+zusammenfasserInterval-1));
         }*/
         //System.out.println("Arraygröße: "+aktuellerAbschnittUnterteilt.size());
-        for(int i = 0; i < closewerte.size()-(vergleichsLaenge+this.auswertungslaenge);i++){
+        for (int i = 0; i < closewerte.size() - (vergleichsLaenge + this.auswertungslaenge); i++) {
             formFound = true;
 
-            if(
-                //sublistAddierer(aktuellerAbschnittUnterteilt.get(0)) - addierer(closewerte,i, i+zusammenfasserInterval-1) < 4 &&
-                //sublistAddierer(aktuellerAbschnittUnterteilt.get(0)) - addierer(closewerte,i, i+zusammenfasserInterval-1) > -4
+            int diffSummeAktOther = addierer(akt, 0, zusammenfasserInterval - 1) - addierer(closewerte, i, i + zusammenfasserInterval - 1);
 
-                    addierer(akt,0,zusammenfasserInterval-1) - addierer(closewerte,i, i+zusammenfasserInterval-1) < 4 &&
-                            addierer(akt,0,zusammenfasserInterval-1) - addierer(closewerte,i, i+zusammenfasserInterval-1) > -4
-                    ){
-                for(int z = zusammenfasserInterval; z < akt.size();z=z+zusammenfasserInterval){
-                    if(
-                        //sublistAddierer(aktuellerAbschnittUnterteilt.get((z+1)/zusammenfasserInterval)) - addierer(closewerte,i+z+1, i+z+zusammenfasserInterval) >= 4 ||
-                        //sublistAddierer(aktuellerAbschnittUnterteilt.get((z+1)/zusammenfasserInterval)) - addierer(closewerte,i+z+1, i+z+zusammenfasserInterval) <= -4
+            if (diffSummeAktOther < 4 && diffSummeAktOther > -4) {
 
-                            addierer(akt,z,z+zusammenfasserInterval-1) - addierer(closewerte,i+z, i+z+zusammenfasserInterval-1) >= 4 ||
-                                    addierer(akt,z,z+zusammenfasserInterval-1) - addierer(closewerte,i+z, i+z+zusammenfasserInterval-1) <= -4
-                            )
-                    {
+                for (int z = zusammenfasserInterval; z < akt.size(); z = z + zusammenfasserInterval) {
+                    diffSummeAktOther = addierer(akt, z, z + zusammenfasserInterval - 1) - addierer(closewerte, i + z, i + z + zusammenfasserInterval - 1);
+
+                    if (diffSummeAktOther >= 4 || diffSummeAktOther <= -4) {
                         formFound = false;
                         break;
                     }
                 }
-                if(formFound){
-                    if(
-                            (addierer(akt,0,akt.size()-1) - addierer(closewerte,i, akt.size()-1) >= (this.vergleichsLaenge / 10)) ||
-                                    (addierer(akt,0,akt.size()-1) - addierer(closewerte,i, akt.size()-1) <= -(this.vergleichsLaenge /10 ))
-                            ){
+                if (formFound) {
+                    diffSummeAktOther = addierer(akt, 0, akt.size() - 1) - addierer(closewerte, i, akt.size() - 1);
+                    if ((diffSummeAktOther >= (this.vergleichsLaenge / 10)) || (diffSummeAktOther <= -(this.vergleichsLaenge / 10))) {
                         //System.out.println("Vom Endgegner abgelehnt!!!");
                         formFound = false;
                     }
                 }
-                if(formFound){
+                if (formFound) {
                     anzFormFound++;
                     int entwicklung = 0;
-                    for(int z =i+this.vergleichsLaenge;z < i+this.vergleichsLaenge+this.auswertungslaenge;z++){
+                    for (int z = i + this.vergleichsLaenge; z < i + this.vergleichsLaenge + this.auswertungslaenge; z++) {
                         entwicklung += closewerte.get(z);
                     }
-                    if(entwicklung > 0){
+                    if (entwicklung > 0) {
                         GenerellPlus++;
-                        if(entwicklung > 10){
+                        if (entwicklung > 10) {
                             hohesPlus++;
                         }
                     }
-                    if(entwicklung < 0){
+                    if (entwicklung < 0) {
                         GenerellMinus++;
-                        if(entwicklung < -10){
+                        if (entwicklung < -10) {
                             hohesMinus++;
                         }
                     }
 
                     //bei Gewinn wird 1 zurückgegeben, bei Verlust 2 und wenn es gleich geblieben ist 0.
-                    if(entwicklung > this.spread){
+                    if (entwicklung > this.spread) {
                         GewinnzaehlerLong++;
-                        if(entwicklung > this.spread){
+                        if (entwicklung > this.spread) {
                             geringerLongGewinn++;
                         }
-                        if(entwicklung > this.spread+3){
+                        if (entwicklung > this.spread + 3) {
                             mittlererLongGewinn++;
                         }
-                        if(entwicklung > this.spread+9){
+                        if (entwicklung > this.spread + 9) {
                             hoherLongGewinn++;
                         }
-                        if(entwicklung > this.spread+15){
+                        if (entwicklung > this.spread + 15) {
                             sehrHoherLongGewinn++;
                         }
 
-                        if(entwicklung > this.spread+6){
+                        if (entwicklung > this.spread + 6) {
                             hoherShortVerlust++;
                         }
                     }
 
-                    if(entwicklung < this.spread){
+                    if (entwicklung < this.spread) {
                         VerlustzaehlerLong++;
                     }
 
 
                     //bei Gewinn wird 1 zurückgegeben, bei Verlust 2 und wenn es gleich geblieben ist 0.
-                    if(entwicklung < -this.spread)
-                    {
+                    if (entwicklung < -this.spread) {
                         GewinnzaehlerShort++;
 
-                        if(entwicklung < -this.spread){
+                        if (entwicklung < -this.spread) {
                             geringerShortGewinn++;
                         }
-                        if(entwicklung < -this.spread-3){
+                        if (entwicklung < -this.spread - 3) {
                             mittlererShortGewinn++;
                         }
-                        if(entwicklung < -this.spread-10){
+                        if (entwicklung < -this.spread - 10) {
                             hoherShortGewinn++;
                         }
-                        if(entwicklung < -this.spread-15){
+                        if (entwicklung < -this.spread - 15) {
                             sehrHoherShortGewinn++;
                         }
-                        if(entwicklung > -this.spread-6){
+                        if (entwicklung > -this.spread - 6) {
                             hoherLongVerlust++;
                         }
                     }
 
-                    if(entwicklung > -this.spread){
+                    if (entwicklung > -this.spread) {
                         VerlustzaehlerShort++;
                     }
 
@@ -184,30 +175,30 @@ public class RechnerZusammenfasser implements Runnable{
             }
         }
 
-        if(anzFormFound>9 && (GewinnzaehlerLong > VerlustzaehlerLong*2 || GewinnzaehlerShort > VerlustzaehlerShort*2)){
+        if (anzFormFound > 9 && (GewinnzaehlerLong > VerlustzaehlerLong * 2 || GewinnzaehlerShort > VerlustzaehlerShort * 2)) {
             String plattform = "IG";
 
             String ausgabe = "";
-            if(this.spread == 1){
-                ausgabe += "\033[31mTRADEN: Plattform: "+ plattform +" Instrument: "+this.instrument+" "+this.vergleichsLaenge +"min "+this.auswertungslaenge+"min\033[0m";
-            }else{
-                ausgabe += "\033[33mTRADEN: Plattform: "+ plattform +" Instrument: "+this.instrument+" "+this.vergleichsLaenge +"min "+this.auswertungslaenge+"min\033[0m";
+            if (this.spread == 1) {
+                ausgabe += "\033[31mTRADEN: Plattform: " + plattform + " Instrument: " + this.instrument + " " + this.vergleichsLaenge + "min " + this.auswertungslaenge + "min\033[0m";
+            } else {
+                ausgabe += "\033[33mTRADEN: Plattform: " + plattform + " Instrument: " + this.instrument + " " + this.vergleichsLaenge + "min " + this.auswertungslaenge + "min\033[0m";
 
             }
-            ausgabe += "\nLong:   GEWINN: "+GewinnzaehlerLong+"/"+anzFormFound+" , "+sehrHoherLongGewinn+"/"+GewinnzaehlerLong+" , "+hoherLongGewinn+"/"+GewinnzaehlerLong+" , "+mittlererLongGewinn+"/"+GewinnzaehlerLong+" , "+geringerLongGewinn+"/"+GewinnzaehlerLong;
-            ausgabe += "\nLong:   VERLUST: "+VerlustzaehlerLong+"/"+anzFormFound+" , "+hoherLongVerlust+"/"+VerlustzaehlerLong;
+            ausgabe += "\nLong:   GEWINN: " + GewinnzaehlerLong + "/" + anzFormFound + " , " + sehrHoherLongGewinn + "/" + GewinnzaehlerLong + " , " + hoherLongGewinn + "/" + GewinnzaehlerLong + " , " + mittlererLongGewinn + "/" + GewinnzaehlerLong + " , " + geringerLongGewinn + "/" + GewinnzaehlerLong;
+            ausgabe += "\nLong:   VERLUST: " + VerlustzaehlerLong + "/" + anzFormFound + " , " + hoherLongVerlust + "/" + VerlustzaehlerLong;
 
-            ausgabe += "\nShort:   GEWINN: "+GewinnzaehlerShort+"/"+anzFormFound+" , "+sehrHoherShortGewinn+"/"+GewinnzaehlerShort+" , "+hoherShortGewinn+"/"+GewinnzaehlerShort+" , "+mittlererShortGewinn+"/"+GewinnzaehlerShort+" , "+geringerShortGewinn+"/"+GewinnzaehlerShort;
-            ausgabe += "\nShort:   VERLUST: "+VerlustzaehlerShort+"/"+anzFormFound+" , "+hoherShortVerlust+"/"+VerlustzaehlerShort+"\n";
+            ausgabe += "\nShort:   GEWINN: " + GewinnzaehlerShort + "/" + anzFormFound + " , " + sehrHoherShortGewinn + "/" + GewinnzaehlerShort + " , " + hoherShortGewinn + "/" + GewinnzaehlerShort + " , " + mittlererShortGewinn + "/" + GewinnzaehlerShort + " , " + geringerShortGewinn + "/" + GewinnzaehlerShort;
+            ausgabe += "\nShort:   VERLUST: " + VerlustzaehlerShort + "/" + anzFormFound + " , " + hoherShortVerlust + "/" + VerlustzaehlerShort + "\n";
             //System.out.print(ausgabe);
         }
 
-        double wahrscheinlichkeitLong = 100* (double) GewinnzaehlerLong / ((double) GewinnzaehlerLong+(double) VerlustzaehlerLong);
-        double wahrscheinlichkeitShort = 100* (double) GewinnzaehlerShort / ((double) GewinnzaehlerShort+(double) VerlustzaehlerShort);
-        double wahrscheinlichkeitLongHoherGewinn = 100* (double) hoherLongGewinn / ((double) GewinnzaehlerLong);
-        double wahrscheinlichkeitShortHoherGewinn = 100* (double) hoherShortGewinn / ((double) GewinnzaehlerShort);
+        double wahrscheinlichkeitLong = 100 * (double) GewinnzaehlerLong / ((double) GewinnzaehlerLong + (double) VerlustzaehlerLong);
+        double wahrscheinlichkeitShort = 100 * (double) GewinnzaehlerShort / ((double) GewinnzaehlerShort + (double) VerlustzaehlerShort);
+        double wahrscheinlichkeitLongHoherGewinn = 100 * (double) hoherLongGewinn / ((double) GewinnzaehlerLong);
+        double wahrscheinlichkeitShortHoherGewinn = 100 * (double) hoherShortGewinn / ((double) GewinnzaehlerShort);
 
-        if(mehrereVergleichsstrecken){
+        if (mehrereVergleichsstrecken) {
             tradevorhersage.setGenerellMinus(GenerellMinus);
             tradevorhersage.setGenerellPlus(GenerellPlus);
             tradevorhersage.setGewinnzaehlerLong(GewinnzaehlerLong);
@@ -230,14 +221,14 @@ public class RechnerZusammenfasser implements Runnable{
         }
     }
 
-    List<Integer> getAnalyseArray(int vergleichsLaenge){
+    List<Integer> getAnalyseArray(int vergleichsLaenge) {
         System.out.println("Vergleichslaenge: " + vergleichsLaenge);
         System.out.println("closewerte == null: " + closewerte == null);
         System.out.println("closewerteSize: " + closewerte.size());
-        return closewerte.subList(closewerte.size() - (vergleichsLaenge), closewerte.size()-1);
+        return closewerte.subList(closewerte.size() - (vergleichsLaenge), closewerte.size() - 1);
     }
 
-    int sublistAddierer(List<Integer> liste){
+    int sublistAddierer(List<Integer> liste) {
         int result = 0;
         for (Integer differenz : liste) {
             result += differenz;
@@ -245,12 +236,16 @@ public class RechnerZusammenfasser implements Runnable{
         return result;
     }
 
-    int addierer(List<Integer> liste, int startIndex, int endIndex){
+    int addierer(List<Integer> liste, int startIndex, int endIndex) {
         int result = 0;
-        for(int i = startIndex; i <= endIndex;i++){
-            result += liste.get(i);
+        for (int i = startIndex; i <= endIndex; i++) {
+            if (liste.size() - 1 > i) {
+                result += liste.get(i);
+            }else{
+                Logger.getGlobal().warning("Addierer will out of range addieren. Liste.size() : "+liste.size()+ "Index: "+i);
+            }
         }
         return result;
     }
-
+ix and autofomynxc,myxnc,myx
 }
