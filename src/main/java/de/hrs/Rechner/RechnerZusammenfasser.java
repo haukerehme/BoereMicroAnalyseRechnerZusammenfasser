@@ -16,7 +16,8 @@ public class RechnerZusammenfasser implements Runnable {
         return tradevorhersage;
     }
 
-    List<Integer> closewerte;
+    List<Integer> historie;
+    List<Integer> gesuchtesMuster;
     List<List<Integer>> aktuellerAbschnittUnterteilt;
     int vergleichsLaenge, auswertungslaenge;
     boolean longPosition, mehrereVergleichsstrecken, SimulatorModus;
@@ -27,8 +28,8 @@ public class RechnerZusammenfasser implements Runnable {
     RechnerZusammenfasser() {
     }
 
-    public RechnerZusammenfasser(List<Integer> intArray, int vergleichsLaenge, int auswertungslaenge, int zusammenfasserInterval, int spread, String instrument, boolean mehrereVergleichsstrecken, boolean Simulatormodus) {
-        this.closewerte = intArray;
+    public RechnerZusammenfasser(List<Integer> intArray, List<Integer> muster, int vergleichsLaenge, int auswertungslaenge, int zusammenfasserInterval, int spread, String instrument, boolean mehrereVergleichsstrecken, boolean Simulatormodus) {
+        this.historie = intArray;
         this.vergleichsLaenge = vergleichsLaenge;
         this.auswertungslaenge = auswertungslaenge;
         this.zusammenfasserInterval = zusammenfasserInterval;
@@ -37,6 +38,7 @@ public class RechnerZusammenfasser implements Runnable {
         this.mehrereVergleichsstrecken = mehrereVergleichsstrecken;
         this.SimulatorModus = Simulatormodus;
         this.tradevorhersage = new Tradevorhersage();
+        this.gesuchtesMuster = muster;
     }
 
     @Override
@@ -68,17 +70,15 @@ public class RechnerZusammenfasser implements Runnable {
         int anzErsterRight = 0;
         boolean formFound;
 
-        List<Integer> gesuchtesMuster = getAnalyseArray(vergleichsLaenge);
-
-        for (int i = 0; i < closewerte.size() - (gesuchtesMuster.size() + this.auswertungslaenge + 1); i++) {
+        for (int i = 0; i < historie.size() - (gesuchtesMuster.size() + this.auswertungslaenge + 1); i++) {
             formFound = true;
 
-            int diffSummeMusterOther = addierer(gesuchtesMuster, 0, zusammenfasserInterval - 1) - addierer(closewerte, i, i + (zusammenfasserInterval - 1));
+            int diffSummeMusterOther = addierer(gesuchtesMuster, 0, zusammenfasserInterval - 1) - addierer(historie, i, i + (zusammenfasserInterval - 1));
 
             if (diffSummeMusterOther < 4 && diffSummeMusterOther > -4) {
 
                 for (int z = zusammenfasserInterval; z < gesuchtesMuster.size(); z = z + zusammenfasserInterval) {
-                    diffSummeMusterOther = addierer(gesuchtesMuster, z, z + zusammenfasserInterval - 1) - addierer(closewerte, i + z, i + z + zusammenfasserInterval - 1);
+                    diffSummeMusterOther = addierer(gesuchtesMuster, z, z + zusammenfasserInterval - 1) - addierer(historie, i + z, i + z + zusammenfasserInterval - 1);
 
                     if (diffSummeMusterOther >= 4 || diffSummeMusterOther <= -4) {
                         formFound = false;
@@ -86,7 +86,7 @@ public class RechnerZusammenfasser implements Runnable {
                     }
                 }
                 if (formFound) {
-                    diffSummeMusterOther = addierer(gesuchtesMuster, 0, gesuchtesMuster.size() - 1) - addierer(closewerte, i, i + (gesuchtesMuster.size() - 1));
+                    diffSummeMusterOther = addierer(gesuchtesMuster, 0, gesuchtesMuster.size() - 1) - addierer(historie, i, i + (gesuchtesMuster.size() - 1));
                     if ((diffSummeMusterOther >= (this.vergleichsLaenge / 10)) || (diffSummeMusterOther <= -(this.vergleichsLaenge / 10))) {
                         //System.out.println("Vom Endgegner abgelehnt!!!");
                         formFound = false;
@@ -96,7 +96,7 @@ public class RechnerZusammenfasser implements Runnable {
                     anzFormFound++;
                     int entwicklung = 0;
                     for (int z = i + this.vergleichsLaenge; z < i + this.vergleichsLaenge + this.auswertungslaenge; z++) {
-                        entwicklung += closewerte.get(z);
+                        entwicklung += historie.get(z);
                     }
                     if (entwicklung > 0) {
                         GenerellPlus++;
@@ -190,7 +190,7 @@ public class RechnerZusammenfasser implements Runnable {
     }
 
     List<Integer> getAnalyseArray(int vergleichsLaenge) {
-        return closewerte.subList(closewerte.size() - (vergleichsLaenge+1), closewerte.size() - 1);
+        return historie.subList(historie.size() - (vergleichsLaenge+1), historie.size() - 1);
     }
 
     int sublistAddierer(List<Integer> liste) {
