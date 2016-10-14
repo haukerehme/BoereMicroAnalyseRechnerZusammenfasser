@@ -78,7 +78,7 @@ public class RechnerZusammenfasser implements Runnable {
             if (diffSummeMusterOther < 4 && diffSummeMusterOther > -4) {
 
                 for (int z = zusammenfasserInterval; z < gesuchtesMuster.size(); z = z + zusammenfasserInterval) {
-                    diffSummeMusterOther = addierer(gesuchtesMuster, z, z + zusammenfasserInterval - 1) - addierer2(closewerte, i + z, i + z + zusammenfasserInterval - 1);
+                    diffSummeMusterOther = addierer(gesuchtesMuster, z, z + zusammenfasserInterval - 1) - addierer(closewerte, i + z, i + z + zusammenfasserInterval - 1);
 
                     if (diffSummeMusterOther >= 4 || diffSummeMusterOther <= -4) {
                         formFound = false;
@@ -234,18 +234,6 @@ public class RechnerZusammenfasser implements Runnable {
                 result += liste.get(i);
             }else{
                 Logger.getGlobal().warning("Addierer will be out of range addieren. Liste.size() : "+liste.size()+ "Index: "+i);
-            }
-        }
-        return result;
-    }
-
-    int addierer2(List<Integer> liste, int startIndex, int endIndex) {
-        int result = 0;
-        for (int i = startIndex; i <= endIndex; i++) {
-            if (liste.size() > i) {
-                result += liste.get(i);
-            }else{
-                Logger.getGlobal().warning("Addierer2 will be out of range addieren. Liste.size() : "+liste.size()+ "Index: "+i);
             }
         }
         return result;
