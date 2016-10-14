@@ -104,9 +104,9 @@ public class AnalyseMehereVergleichsstrecken implements Runnable {
         int blockgroesse = (this.closewerte.size() - (auswertungslaenge + 240)) / threadPaare;
         for (int i = 0; i < threadPaare ; i++){
             List<Integer> historie = new ArrayList<>(this.closewerte.subList(i * blockgroesse,((i + 1) * blockgroesse) - 1 + auswertungslaenge));
-            List<Integer> muster = new ArrayList<>(this.closewerte.subList(this.closewerte.size()-(vergleichslaengen.length+1),this.closewerte.size()-1));
 
             for(int j = 0; j < vergleichslaengen.length;j++){
+                List<Integer> muster = new ArrayList<>(this.closewerte.subList(this.closewerte.size()-(vergleichslaengen[j]+1),this.closewerte.size()-1));
                 listRechner.add(new RechnerZusammenfasser(historie, muster, vergleichslaengen[j],
                         auswertungslaenge, zusammenfasserInterval[j], spread, "EUR/USD", true, false));
                 listThread.add(new Thread(listRechner.get((i*vergleichslaengen.length)+j)));
