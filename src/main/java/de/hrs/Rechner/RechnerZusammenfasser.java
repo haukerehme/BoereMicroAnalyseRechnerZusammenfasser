@@ -85,13 +85,13 @@ public class RechnerZusammenfasser implements Runnable {
                         break;
                     }
                 }*/
-                /*if (formFound) {
+                if (formFound) {
                     diffSummeMusterOther = addierer(gesuchtesMuster, 0, gesuchtesMuster.size() - 1) - addierer(closewerte, i, i + (gesuchtesMuster.size() - 1));
                     if ((diffSummeMusterOther >= (this.vergleichsLaenge / 10)) || (diffSummeMusterOther <= -(this.vergleichsLaenge / 10))) {
                         //System.out.println("Vom Endgegner abgelehnt!!!");
                         formFound = false;
                     }
-                }*/
+                }
                 if (formFound) {
                     anzFormFound++;
                     int entwicklung = 0;
