@@ -230,10 +230,10 @@ public class RechnerZusammenfasser implements Runnable {
     int addierer(List<Integer> liste, int startIndex, int endIndex) {
         int result = 0;
         for (int i = startIndex; i <= endIndex; i++) {
-            if (liste.size() - 1 > i) {
+            if (liste.size() - 1 < i) {
                 result += liste.get(i);
             }else{
-                Logger.getGlobal().warning("Addierer will out of range addieren. Liste.size() : "+liste.size()+ "Index: "+i);
+                Logger.getGlobal().warning("Addierer will be out of range addieren. Liste.size() : "+liste.size()+ "Index: "+i);
             }
         }
         return result;
