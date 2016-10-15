@@ -97,7 +97,7 @@ public class AnalyseMehereVergleichsstrecken implements Runnable {
 
         int[] vergleichslaengen = {240,210,180,150,120};
         int[] zusammenfasserInterval = {30,30,20,10,10};
-        int threadPaare = 1;
+        int threadPaare = 10;
 
         // - auswertungslaenge, weil die auswertungslaenge eh übergeben wird
         // - 240 da das längste Muster abgezogen werden muss
