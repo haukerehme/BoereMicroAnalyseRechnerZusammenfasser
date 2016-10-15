@@ -97,7 +97,7 @@ public class AnalyseMehereVergleichsstrecken implements Runnable {
 
         int[] vergleichslaengen = {240,210,180,150,120};
         int[] zusammenfasserInterval = {30,30,20,10,10};
-        int threadPaare = 10;
+        int threadPaare = 1;
 
         // - auswertungslaenge, weil die auswertungslaenge eh übergeben wird
         // - 240 da das längste Muster abgezogen werden muss
@@ -105,7 +105,7 @@ public class AnalyseMehereVergleichsstrecken implements Runnable {
         for (int i = 0; i < threadPaare ; i++){
             //List<Integer> historie = new ArrayList<>(this.closewerte.subList(i * blockgroesse,((i + 1) * blockgroesse) - 1 + auswertungslaenge));
             List<Integer> historie = new ArrayList<>();
-            for (int z = 0; z < closewerte.size() - ((i + 1) * blockgroesse) - 1 + auswertungslaenge; z++){
+            for (int z = i * blockgroesse; z < closewerte.size() - ((i + 1) * blockgroesse) - 1 + auswertungslaenge; z++){
                 historie.add(closewerte.get(z));
             }
 
@@ -115,8 +115,7 @@ public class AnalyseMehereVergleichsstrecken implements Runnable {
                     muster.add(closewerte.get(z));
                 }
                 //List<Integer> muster = new ArrayList<>(this.closewerte.subList(this.closewerte.size()-(vergleichslaengen[j]+1),this.closewerte.size()-1));
-                listRechner.add(new RechnerZusammenfasser(historie, muster, vergleichslaengen[j],
-                        auswertungslaenge, zusammenfasserInterval[j], spread, "EUR/USD", true, false));
+                listRechner.add(new RechnerZusammenfasser(historie, muster, vergleichslaengen[j], auswertungslaenge, zusammenfasserInterval[j], spread, "EUR/USD", true, false));
                 listThread.add(new Thread(listRechner.get((i*vergleichslaengen.length)+j)));
                 listThread.get((i*vergleichslaengen.length)+j).start();
             }
