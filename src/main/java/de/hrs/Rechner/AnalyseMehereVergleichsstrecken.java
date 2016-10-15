@@ -97,7 +97,7 @@ public class AnalyseMehereVergleichsstrecken implements Runnable {
 
         int[] vergleichslaengen = {240,210,180,150,120};
         int[] zusammenfasserInterval = {30,30,20,10,10};
-        int threadPaare = 1;
+        int threadPaare = 10;
 
         // - auswertungslaenge, weil die auswertungslaenge eh übergeben wird
         // - 240 da das längste Muster abgezogen werden muss
@@ -105,7 +105,7 @@ public class AnalyseMehereVergleichsstrecken implements Runnable {
         for (int i = 0; i < threadPaare ; i++){
             //List<Integer> historie = new ArrayList<>(this.closewerte.subList(i * blockgroesse,((i + 1) * blockgroesse) - 1 + auswertungslaenge));
             List<Integer> historie = new ArrayList<>();
-            for (int z = i * blockgroesse; z < closewerte.size() - ((i + 1) * blockgroesse) - 1 + auswertungslaenge; z++){
+            for (int z = i * blockgroesse; z <  ((i + 1) * blockgroesse) - 1 + auswertungslaenge; z++){
                 historie.add(closewerte.get(z));
             }
 
