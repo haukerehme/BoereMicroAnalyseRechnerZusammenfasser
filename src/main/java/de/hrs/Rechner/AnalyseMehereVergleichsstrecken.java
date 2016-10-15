@@ -105,13 +105,13 @@ public class AnalyseMehereVergleichsstrecken implements Runnable {
         for (int i = 0; i < threadPaare ; i++){
             //List<Integer> historie = new ArrayList<>(this.closewerte.subList(i * blockgroesse,((i + 1) * blockgroesse) - 1 + auswertungslaenge));
             List<Integer> historie = new ArrayList<>();
-            for (int z = 0; z < closewerte.size() - ((i + 1) * blockgroesse) - 1 + auswertungslaenge; i++){
+            for (int z = 0; z < closewerte.size() - ((i + 1) * blockgroesse) - 1 + auswertungslaenge; z++){
                 historie.add(closewerte.get(z));
             }
 
             for(int j = 0; j < vergleichslaengen.length;j++){
                 List<Integer> muster = new ArrayList<>();
-                for (int z = this.closewerte.size()-(vergleichslaengen[j]+1); z < this.closewerte.size()-1; i++){
+                for (int z = this.closewerte.size()-(vergleichslaengen[j]+1); z < this.closewerte.size()-1; z++){
                     muster.add(closewerte.get(z));
                 }
                 //List<Integer> muster = new ArrayList<>(this.closewerte.subList(this.closewerte.size()-(vergleichslaengen[j]+1),this.closewerte.size()-1));
